@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TODO ENGLISH — 학습 체험관</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#2D2B5A;--pink:#FF6B9D;--gold:#FFD700;
+  --purple:#8B5CF6;--orange:#F97316;--green:#22C55E;
+  --blue:#0091FF;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Nunito',sans-serif;color:var(--navy);overflow-x:hidden}
+
+/* ═══════════════════════════════
+   GATE PAGE
+═══════════════════════════════ */
+#gate{
+  position:relative;min-height:100vh;
+  background:#DCE8F5;
+  overflow:hidden;display:flex;flex-direction:column;align-items:center;
+}
+
+/* Background geometric shapes */
+.bg-shapes{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.bg-s{position:absolute;border-radius:12px;opacity:.18}
+.bg-s.s1{width:120px;height:220px;background:#9B59FF;top:-30px;right:22%;transform:rotate(15deg)}
+.bg-s.s2{width:90px;height:160px;background:#FF6B9D;top:60px;right:14%;transform:rotate(-8deg)}
+.bg-s.s3{width:80px;height:140px;background:#FFD700;top:10px;right:8%;transform:rotate(20deg)}
+.bg-s.s4{width:70px;height:120px;background:#4ECDC4;top:-20px;left:6%;transform:rotate(-15deg)}
+.bg-s.s5{width:50px;height:50px;background:#FF8C42;bottom:30%;left:3%;transform:rotate(30deg);border-radius:50%}
+.bg-s.s6{width:40px;height:40px;background:#FFD700;bottom:20%;right:5%;transform:rotate(45deg)}
+.bg-s.s7{width:28px;height:28px;background:#9B59FF;top:40%;left:12%;border-radius:50%}
+.bg-s.s8{width:18px;height:18px;background:#4ECDC4;top:30%;right:20%;border-radius:50%}
+.bg-s.s9{width:100px;height:180px;background:#8B5CF6;bottom:-40px;left:30%;transform:rotate(10deg)}
+
+@keyframes float1{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes float2{0%,100%{transform:translateY(-8px)}50%{transform:translateY(6px)}}
+
+/* Gate headline */
+.gate-headline{
+  position:relative;z-index:2;text-align:center;
+  padding:52px 20px 24px;color:var(--navy)
+}
+.gate-headline h2{font-size:clamp(22px,3.5vw,36px);font-weight:800;margin-bottom:6px;}
+.gate-headline h2 em{font-style:normal;color:var(--pink);font-size:1.08em}
+
+/* Tablet device */
+.gate-device{position:relative;z-index:3;margin:0 auto}
+.gate-tablet-wrap{
+  transform:perspective(1400px) rotateX(10deg);
+  transform-origin:center bottom;
+  filter:drop-shadow(0 40px 60px rgba(0,0,0,.45));
+}
+.gate-tablet{
+  background:#1a1a2e;border-radius:22px;
+  border:3px solid #3a3a5c;
+  padding:38px 28px 32px;
+  position:relative;display:inline-block;
+}
+.gate-tablet::before{content:'';position:absolute;top:15px;left:50%;transform:translateX(-50%);width:8px;height:8px;background:#252540;border-radius:50%}
+.gate-tablet::after{content:'';position:absolute;bottom:11px;left:50%;transform:translateX(-50%);width:70px;height:4px;background:#252540;border-radius:2px}
+.gate-screen{width:620px;height:418px;border-radius:8px;overflow:hidden;position:relative;background:#111}
+.gate-screen img{width:100%;height:100%;object-fit:cover;display:block}
+/* START button overlay on tablet — covers the in-app START button area */
+.enter-btn{
+  position:absolute;
+  bottom:22%;left:50%;transform:translateX(-50%);
+  background:transparent;border:none;
+  width:38%;height:10%;
+  cursor:pointer;z-index:5;
+  border-radius:50px;
+}
+.enter-btn:hover{opacity:.85;}
+.enter-btn:active{transform:translateX(-50%) scale(.97);}
+
+/* Bottom CTA strip on gate */
+.gate-cta{
+  position:relative;z-index:2;width:100%;max-width:700px;
+  margin:24px 20px 32px;
+  background:rgba(255,255,255,.94);backdrop-filter:blur(10px);
+  border-radius:24px;padding:24px 32px;text-align:center;
+  box-shadow:0 8px 32px rgba(0,0,0,.15);
+}
+.gate-cta p{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:16px}
+.gate-cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.cta-orange{background:var(--orange);color:#fff;border:none;border-radius:50px;padding:14px 28px;font-size:15px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;transition:opacity .15s}
+.cta-blue{background:#0091FF;color:#fff;border:none;border-radius:50px;padding:14px 28px;font-size:15px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;transition:opacity .15s}
+.cta-orange:hover,.cta-blue:hover{opacity:.88}
+
+/* ═══════════════════════════════
+   TOUR MODAL
+═══════════════════════════════ */
+#tour-modal{
+  position:fixed;inset:0;
+  background:#0a0a18;
+  z-index:1000;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:space-between;
+  padding:0;
+}
+#tour-modal.open{display:flex}
+
+/* Top bar */
+.tour-topbar{
+  width:100%;display:flex;align-items:center;
+  justify-content:space-between;padding:16px 28px;
+  flex-shrink:0;
+}
+.tour-dots{display:flex;gap:8px}
+.t-dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.25);transition:background .2s,transform .2s}
+.t-dot.on{background:#fff;transform:scale(1.2)}
+.t-dot.done{background:rgba(255,255,255,.55)}
+.tour-step-lbl{font-size:13px;color:rgba(255,255,255,.5);font-weight:700}
+.skip-btn{
+  background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.25);
+  border-radius:50px;padding:8px 18px;color:#fff;font-size:13px;font-weight:800;
+  font-family:'Nunito',sans-serif;cursor:pointer;display:flex;align-items:center;gap:5px;
+  transition:background .15s;
+}
+.skip-btn:hover{background:rgba(255,255,255,.2)}
+
+/* Tour tablet area */
+.tour-center{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:0 20px;width:100%;
+}
+.tour-tablet{
+  background:#1a1a2e;border-radius:24px;border:3px solid #3a3a5c;
+  box-shadow:0 0 0 2px #0a0a18,0 40px 80px rgba(0,0,0,.6);
+  padding:40px 28px 34px;position:relative;display:inline-block;
+}
+.tour-tablet::before{content:'';position:absolute;top:16px;left:50%;transform:translateX(-50%);width:9px;height:9px;background:#252540;border-radius:50%}
+.tour-tablet::after{content:'';position:absolute;bottom:12px;left:50%;transform:translateX(-50%);width:80px;height:4px;background:#252540;border-radius:2px}
+.tour-screen{
+  width:820px;height:556px;
+  border-radius:8px;overflow:hidden;position:relative;background:#111;
+}
+.tour-screen img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .25s}
+.tour-screen img.fading{opacity:0}
+
+/* Spotlight highlight */
+.spotlight-el{
+  display:none;position:absolute;border-radius:10px;z-index:15;pointer-events:none;
+  box-shadow:0 0 0 9999px rgba(0,0,0,.58);
+}
+
+/* Guide bubble — bottom of tour screen */
+.guide-bubble{
+  position:absolute;bottom:0;left:0;right:0;
+  background:rgba(140,210,245,.96);backdrop-filter:blur(8px);
+  border-radius:0 0 8px 8px;
+  padding:18px 20px 20px;
+  display:flex;align-items:center;gap:16px;
+  z-index:20;min-height:110px;
+}
+.bubble-text{flex:1;font-size:14px;font-weight:700;color:#0a1a40;line-height:1.65}
+.bubble-text strong{color:#0055AA}
+.next-btn{
+  flex-shrink:0;background:#fff;border:none;border-radius:16px;
+  padding:14px 20px;font-size:14px;font-weight:900;font-family:'Nunito',sans-serif;
+  color:#0055AA;cursor:pointer;white-space:nowrap;
+  box-shadow:0 4px 14px rgba(0,0,0,.12);transition:transform .12s,box-shadow .12s;
+  min-width:88px;text-align:center;
+}
+.next-btn:hover{transform:scale(1.04);box-shadow:0 6px 20px rgba(0,0,0,.18)}
+.next-btn.finish{background:var(--orange);color:#fff}
+
+/* Tour complete screen */
+.tour-complete{
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:40px;
+}
+.tour-complete h2{font-size:32px;font-weight:900;color:#fff;margin-bottom:12px}
+.tour-complete p{font-size:16px;color:rgba(255,255,255,.65);margin-bottom:32px;line-height:1.7}
+.tour-complete-btns{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+.tc-btn{border:none;border-radius:50px;padding:15px 30px;font-size:15px;font-weight:800;font-family:'Nunito',sans-serif;cursor:pointer;transition:opacity .15s}
+.tc-btn:hover{opacity:.85}
+
+/* ═══════════════════════════════
+   RESPONSIVE
+═══════════════════════════════ */
+@media(max-width:1000px){
+  .tour-screen{width:680px;height:460px}
+  .tour-tablet{padding:34px 22px 28px}
+  .gate-screen{width:500px;height:337px}
+  .gate-tablet{padding:30px 22px 26px}
+}
+@media(max-width:768px){
+  .gate-screen{width:300px;height:202px}
+  .gate-tablet{padding:26px 16px 22px}
+  .gate-headline h2{font-size:18px}
+  .enter-btn{font-size:14px;padding:12px 22px}
+  .mascot .face{font-size:36px}
+  .tour-screen{width:320px;height:216px}
+  .tour-tablet{padding:28px 16px 24px}
+  .bubble-text{font-size:12px}
+  .guide-bubble{min-height:90px;padding:14px 14px 16px}
+  .next-btn{padding:10px 14px;font-size:13px;min-width:72px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     GATE PAGE
+══════════════════════════════════════ -->
+<div id="gate">
+  <div class="bg-shapes">
+    <div class="bg-s s1"></div><div class="bg-s s2"></div><div class="bg-s s3"></div>
+    <div class="bg-s s4"></div><div class="bg-s s5"></div><div class="bg-s s6"></div>
+    <div class="bg-s s7"></div><div class="bg-s s8"></div><div class="bg-s s9"></div>
+  </div>
+  <div class="gate-headline">
+    <h2>TODO ENGLISH 학습을 지금 바로<br><em>간편하게 체험</em>해 보세요.</h2>
+  </div>
+
+  <div class="gate-device">
+    <div class="gate-tablet-wrap">
+      <div class="gate-tablet">
+        <div class="gate-screen">
+          <img src="0.jpg" alt="TODO ENGLISH 앱 화면">
+          <button class="enter-btn" onclick="openTour()" aria-label="학습체험관 입장"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="gate-cta">
+    <p>TODO ENGLISH를 좀 더 경험하고 싶다면</p>
+    <div class="gate-cta-btns">
+      <!-- TODO: 실제 URL로 교체 -->
+      <button class="cta-orange" onclick="location.href='#'">지금 구매하기</button>
+      <button class="cta-blue" onclick="location.href='#'">7일 무료체험 신청</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     TOUR MODAL
+══════════════════════════════════════ -->
+<div id="tour-modal">
+  <div class="tour-topbar">
+    <div class="tour-dots" id="tour-dots"></div>
+    <span class="tour-step-lbl" id="tour-step-lbl"></span>
+    <button class="skip-btn" onclick="closeTour()">SKIP &nbsp;›</button>
+  </div>
+
+  <div class="tour-center" id="tour-center">
+    <div class="tour-tablet">
+      <div class="tour-screen" id="tour-screen">
+        <img id="tour-img" src="0.jpg" alt="앱 화면">
+        <div class="spotlight-el" id="spotlight-el"></div>
+        <div class="guide-bubble" id="guide-bubble">
+          <div class="bubble-text" id="bubble-text"></div>
+          <button class="next-btn" id="next-btn" onclick="nextStep()">다음 ›</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tour-complete" id="tour-complete">
+    <div style="font-size:60px;margin-bottom:20px">🎉</div>
+    <h2>체험 완료!</h2>
+    <p>TODO ENGLISH의 주요 기능을 모두 살펴봤어요.<br>지금 바로 시작해서 아이의 영어를 키워보세요!</p>
+    <div class="tour-complete-btns">
+      <!-- TODO: 실제 URL로 교체 -->
+      <button class="tc-btn" style="background:var(--orange);color:#fff" onclick="closeTour()">지금 구매하기</button>
+      <button class="tc-btn" style="background:#0091FF;color:#fff" onclick="closeTour()">7일 무료체험 신청</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STEPS = [
+  {
+    img:'0.jpg',
+    spot:null,
+    text:'<strong>TODO ENGLISH 체험관</strong>에 오신 것을 환영해요! 하루 15분, 레벨 A~F 맞춤 커리큘럼으로 우리 아이의 영어 실력을 키워보세요~'
+  },
+  {
+    img:'1.jpg',
+    spot:null,
+    text:'<strong>홈 대시보드</strong>예요. 데일리 코스, 단어장, 매거진, 펫 챌린지 등 모든 기능을 한눈에 볼 수 있어요!'
+  },
+  {
+    img:'2.jpg',
+    spot:null,
+    text:'<strong>데일리 코스</strong> 화면이에요. Sound Train, 철자 게임, 별자리 알파벳 등 6가지 미니게임으로 영어를 재미있게 배워요!'
+  },
+  {
+    img:'3.jpg',
+    spot:null,
+    text:'<strong>오늘의 미션</strong>을 완료하면 별을 받아요! 데일리 코스, 책 읽기, 영상 보기, 게임 2개로 하루 학습이 완성돼요.'
+  },
+  {
+    img:'4_1.jpg',
+    spot:null,
+    text:'<strong>단어장 Glossary</strong>예요. 레벨별로 단어 카드를 확인하고, 발음 버튼으로 원어민 발음을 들을 수 있어요!'
+  },
+  {
+    img:'4_2.jpg',
+    spot:null,
+    text:'그림을 보고 빈칸에 알맞은 글자를 입력하는 <strong>단어 게임</strong>이에요! 직접 키보드를 눌러 영어 단어를 완성해보세요.'
+  },
+  {
+    img:'5_1.jpg',
+    spot:null,
+    text:'<strong>Weekly Magazine</strong> 목록이에요. 매주 새로운 주제로 업데이트되며, 영상·만화·게임·기사 4가지 코너가 담겨 있어요!'
+  },
+  {
+    img:'5_2.jpg',
+    spot:null,
+    text:'매거진을 펼치면 이렇게 보여요! 실제 주제로 구성된 풍성한 영어 콘텐츠로 읽기·듣기·쓰기를 함께 익혀요.'
+  },
+  {
+    img:'6_1.jpg',
+    spot:null,
+    text:'<strong>펫 챌린지 방</strong>이에요. 캔디를 모아 펫 방을 꾸미고, 강아지 펫과 함께 성장하는 재미가 있어요!'
+  },
+  {
+    img:'6_2.jpg',
+    spot:null,
+    text:'<strong>챌린지 맵</strong>이에요. 단어 문제를 맞추며 모험 맵을 탐험하고, 스테이지를 클리어할수록 펫이 성장해요!'
+  }
+];
+
+let tourStep = 0;
+
+function openTour() {
+  tourStep = 0;
+  document.getElementById('tour-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  buildDots();
+  renderStep(0);
+}
+
+function closeTour() {
+  document.getElementById('tour-modal').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('tour-center').style.display = 'flex';
+  document.getElementById('tour-complete').style.display = 'none';
+}
+
+function buildDots() {
+  const container = document.getElementById('tour-dots');
+  container.innerHTML = '';
+  STEPS.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 't-dot' + (i === 0 ? ' on' : '');
+    container.appendChild(d);
+  });
+}
+
+function updateDots(step) {
+  document.querySelectorAll('.t-dot').forEach((d, i) => {
+    d.classList.toggle('on', i === step);
+    d.classList.toggle('done', i < step);
+  });
+  document.getElementById('tour-step-lbl').textContent = (step + 1) + ' / ' + STEPS.length;
+}
+
+function renderStep(step) {
+  const s = STEPS[step];
+  const img = document.getElementById('tour-img');
+
+  img.classList.add('fading');
+  setTimeout(() => {
+    img.src = s.img;
+    img.onload = () => img.classList.remove('fading');
+    img.onerror = () => img.classList.remove('fading');
+  }, 200);
+
+  const spot = document.getElementById('spotlight-el');
+  if (s.spot) {
+    spot.style.display = 'block';
+    spot.style.left = s.spot.x + '%';
+    spot.style.top = s.spot.y + '%';
+    spot.style.width = s.spot.w + '%';
+    spot.style.height = s.spot.h + '%';
+  } else {
+    spot.style.display = 'none';
+  }
+
+  document.getElementById('bubble-text').innerHTML = s.text;
+
+  const nextBtn = document.getElementById('next-btn');
+  const isLast = step === STEPS.length - 1;
+  nextBtn.textContent = isLast ? '완료 ✓' : '다음 ›';
+  nextBtn.className = 'next-btn' + (isLast ? ' finish' : '');
+
+  updateDots(step);
+}
+
+function nextStep() {
+  if (tourStep < STEPS.length - 1) {
+    tourStep++;
+    renderStep(tourStep);
+  } else {
+    document.getElementById('tour-center').style.display = 'none';
+    document.getElementById('tour-complete').style.display = 'flex';
+  }
+}
+</script>
+</body>
+</html>
