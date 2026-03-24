@@ -39,6 +39,7 @@ body{font-family:'Nunito',sans-serif;color:var(--navy);overflow-x:hidden}
 
 @keyframes float1{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
 @keyframes float2{0%,100%{transform:translateY(-8px)}50%{transform:translateY(6px)}}
+@keyframes fingerTap{0%,100%{transform:scale(1) rotate(-10deg)}50%{transform:scale(.88) rotate(-10deg)}}
 
 /* Gate headline */
 .gate-headline{
@@ -63,8 +64,13 @@ body{font-family:'Nunito',sans-serif;color:var(--navy);overflow-x:hidden}
 }
 .gate-tablet::before{content:'';position:absolute;top:15px;left:50%;transform:translateX(-50%);width:8px;height:8px;background:#252540;border-radius:50%}
 .gate-tablet::after{content:'';position:absolute;bottom:11px;left:50%;transform:translateX(-50%);width:70px;height:4px;background:#252540;border-radius:2px}
-.gate-screen{width:620px;height:418px;border-radius:8px;overflow:hidden;position:relative;background:#111}
+/* gate-screen: 620×388 (16:10 ratio) */
+.gate-screen{width:620px;height:388px;border-radius:8px;overflow:hidden;position:relative;background:#111}
 .gate-screen img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* Click hint finger on gate */
+.click-hint{position:absolute;bottom:10%;left:56%;transform:translateX(-50%);font-size:3rem;pointer-events:none;animation:fingerTap 1.2s ease-in-out infinite}
+
 /* START button overlay on tablet — covers the in-app START button area */
 .enter-btn{
   position:absolute;
@@ -137,39 +143,45 @@ body{font-family:'Nunito',sans-serif;color:var(--navy);overflow-x:hidden}
 }
 .tour-tablet::before{content:'';position:absolute;top:16px;left:50%;transform:translateX(-50%);width:9px;height:9px;background:#252540;border-radius:50%}
 .tour-tablet::after{content:'';position:absolute;bottom:12px;left:50%;transform:translateX(-50%);width:80px;height:4px;background:#252540;border-radius:2px}
+/* tour-screen: 820×513 (16:10 ratio) */
 .tour-screen{
-  width:820px;height:556px;
+  width:820px;height:513px;
   border-radius:8px;overflow:hidden;position:relative;background:#111;
 }
-.tour-screen img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .25s}
-.tour-screen img.fading{opacity:0}
+#tour-img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .25s}
+#tour-img.fading{opacity:0}
 
-/* Spotlight highlight */
-.spotlight-el{
-  display:none;position:absolute;border-radius:10px;z-index:15;pointer-events:none;
-  box-shadow:0 0 0 9999px rgba(0,0,0,.58);
+/* Hotspot — clickable area with finger */
+.hotspot{
+  display:none;position:absolute;border-radius:10px;z-index:25;cursor:pointer;
+}
+.hotspot-finger{
+  position:absolute;bottom:-8px;right:-12px;
+  font-size:3rem;pointer-events:none;
+  animation:fingerTap 1.2s ease-in-out infinite;
 }
 
-/* Guide bubble — bottom of tour screen */
+/* Guide bubble — top or bottom of tour screen */
 .guide-bubble{
-  position:absolute;bottom:0;left:0;right:0;
+  position:absolute;left:0;right:0;
   background:rgba(140,210,245,.96);backdrop-filter:blur(8px);
-  border-radius:0 0 8px 8px;
-  padding:18px 20px 20px;
+  padding:18px 20px 20px 130px;
   display:flex;align-items:center;gap:16px;
-  z-index:20;min-height:110px;
+  z-index:20;min-height:120px;
 }
+.guide-bubble.pos-bottom{bottom:0;top:auto;border-radius:0 0 8px 8px}
+.guide-bubble.pos-top{top:0;bottom:auto;border-radius:8px 8px 0 0}
 .bubble-text{flex:1;font-size:14px;font-weight:700;color:#0a1a40;line-height:1.65}
 .bubble-text strong{color:#0055AA}
-.next-btn{
-  flex-shrink:0;background:#fff;border:none;border-radius:16px;
-  padding:14px 20px;font-size:14px;font-weight:900;font-family:'Nunito',sans-serif;
-  color:#0055AA;cursor:pointer;white-space:nowrap;
-  box-shadow:0 4px 14px rgba(0,0,0,.12);transition:transform .12s,box-shadow .12s;
-  min-width:88px;text-align:center;
+
+/* Character in guide bubble */
+.guide-char{
+  position:absolute;left:10px;
+  width:116px;height:140px;
+  object-fit:contain;z-index:22;pointer-events:none;
 }
-.next-btn:hover{transform:scale(1.04);box-shadow:0 6px 20px rgba(0,0,0,.18)}
-.next-btn.finish{background:var(--orange);color:#fff}
+.guide-char.pos-bottom{bottom:0;top:auto;object-position:bottom center}
+.guide-char.pos-top{top:0;bottom:auto;object-position:top center}
 
 /* Tour complete screen */
 .tour-complete{
@@ -186,22 +198,21 @@ body{font-family:'Nunito',sans-serif;color:var(--navy);overflow-x:hidden}
    RESPONSIVE
 ═══════════════════════════════ */
 @media(max-width:1000px){
-  .tour-screen{width:680px;height:460px}
+  .tour-screen{width:680px;height:425px}
   .tour-tablet{padding:34px 22px 28px}
-  .gate-screen{width:500px;height:337px}
+  .gate-screen{width:500px;height:313px}
   .gate-tablet{padding:30px 22px 26px}
 }
 @media(max-width:768px){
-  .gate-screen{width:300px;height:202px}
+  .gate-screen{width:300px;height:188px}
   .gate-tablet{padding:26px 16px 22px}
   .gate-headline h2{font-size:18px}
   .enter-btn{font-size:14px;padding:12px 22px}
-  .mascot .face{font-size:36px}
-  .tour-screen{width:320px;height:216px}
+  .tour-screen{width:320px;height:200px}
   .tour-tablet{padding:28px 16px 24px}
   .bubble-text{font-size:12px}
-  .guide-bubble{min-height:90px;padding:14px 14px 16px}
-  .next-btn{padding:10px 14px;font-size:13px;min-width:72px}
+  .guide-bubble{min-height:90px;padding:14px 14px 16px 100px}
+  .guide-char{width:88px;height:110px}
 }
 </style>
 </head>
@@ -225,6 +236,7 @@ body{font-family:'Nunito',sans-serif;color:var(--navy);overflow-x:hidden}
       <div class="gate-tablet">
         <div class="gate-screen">
           <img src="0.jpg" alt="TODO ENGLISH 앱 화면">
+          <span class="click-hint">👆</span>
           <button class="enter-btn" onclick="openTour()" aria-label="학습체험관 입장"></button>
         </div>
       </div>
@@ -235,7 +247,7 @@ body{font-family:'Nunito',sans-serif;color:var(--navy);overflow-x:hidden}
     <p>TODO ENGLISH를 좀 더 경험하고 싶다면</p>
     <div class="gate-cta-btns">
       <!-- TODO: 실제 URL로 교체 -->
-      <button class="cta-orange" onclick="location.href='#'">지금 구매하기</button>
+      <button class="cta-orange" onclick="location.href='#'">멤버십 구매</button>
       <button class="cta-blue" onclick="location.href='#'">7일 무료체험 신청</button>
     </div>
   </div>
@@ -255,10 +267,12 @@ body{font-family:'Nunito',sans-serif;color:var(--navy);overflow-x:hidden}
     <div class="tour-tablet">
       <div class="tour-screen" id="tour-screen">
         <img id="tour-img" src="0.jpg" alt="앱 화면">
-        <div class="spotlight-el" id="spotlight-el"></div>
-        <div class="guide-bubble" id="guide-bubble">
+        <div class="hotspot" id="hotspot" onclick="nextStep()">
+          <span class="hotspot-finger">👆</span>
+        </div>
+        <div class="guide-bubble pos-bottom" id="guide-bubble">
+          <img class="guide-char pos-bottom" id="guide-char" src="character.png" alt="">
           <div class="bubble-text" id="bubble-text"></div>
-          <button class="next-btn" id="next-btn" onclick="nextStep()">다음 ›</button>
         </div>
       </div>
     </div>
@@ -267,10 +281,10 @@ body{font-family:'Nunito',sans-serif;color:var(--navy);overflow-x:hidden}
   <div class="tour-complete" id="tour-complete">
     <div style="font-size:60px;margin-bottom:20px">🎉</div>
     <h2>체험 완료!</h2>
-    <p>TODO ENGLISH의 주요 기능을 모두 살펴봤어요.<br>지금 바로 시작해서 아이의 영어를 키워보세요!</p>
+    <p>토도영어의 주요 기능을 모두 살펴봤어요.<br>지금 바로 시작해서 아이의 영어를 키워보세요!</p>
     <div class="tour-complete-btns">
       <!-- TODO: 실제 URL로 교체 -->
-      <button class="tc-btn" style="background:var(--orange);color:#fff" onclick="closeTour()">지금 구매하기</button>
+      <button class="tc-btn" style="background:var(--orange);color:#fff" onclick="closeTour()">멤버십 구매</button>
       <button class="tc-btn" style="background:#0091FF;color:#fff" onclick="closeTour()">7일 무료체험 신청</button>
     </div>
   </div>
@@ -280,62 +294,81 @@ body{font-family:'Nunito',sans-serif;color:var(--navy);overflow-x:hidden}
 const STEPS = [
   {
     img:'0.jpg',
-    spot:null,
-    text:'<strong>TODO ENGLISH 체험관</strong>에 오신 것을 환영해요! 하루 15분, 레벨 A~F 맞춤 커리큘럼으로 우리 아이의 영어 실력을 키워보세요~'
+    spot:{x:28,y:68,w:36,h:14},
+    bubblePos:'top',
+    text:'<strong>토도영어 체험관</strong>에 오신 것을 환영해요! START 버튼을 눌러 시작해볼까요?'
   },
   {
     img:'1.jpg',
-    spot:null,
-    text:'<strong>홈 대시보드</strong>예요. 데일리 코스, 단어장, 매거진, 펫 챌린지 등 모든 기능을 한눈에 볼 수 있어요!'
+    spot:{x:11,y:28,w:38,h:54},
+    text:'이곳이 <strong>홈 대시보드</strong>예요. <strong>Daily Course</strong>를 눌러서 오늘의 학습을 시작해보세요!'
   },
   {
     img:'2.jpg',
-    spot:null,
-    text:'<strong>데일리 코스</strong> 화면이에요. Sound Train, 철자 게임, 별자리 알파벳 등 6가지 미니게임으로 영어를 재미있게 배워요!'
+    spot:{x:88,y:37,w:11,h:8},
+    text:'<strong>데일리 코스</strong>예요. 오른쪽 <strong>Mission</strong> 메뉴를 눌러볼까요?'
   },
   {
     img:'3.jpg',
-    spot:null,
-    text:'<strong>오늘의 미션</strong>을 완료하면 별을 받아요! 데일리 코스, 책 읽기, 영상 보기, 게임 2개로 하루 학습이 완성돼요.'
+    spot:{x:78,y:10,w:8,h:17},
+    text:'<strong>오늘의 미션</strong>이에요! X 버튼으로 닫아봐요.'
+  },
+  {
+    img:'1.jpg',
+    spot:{x:84,y:43,w:15,h:18},
+    text:'다시 홈으로 왔어요. 오른쪽 <strong>Glossary</strong> 메뉴를 눌러볼까요?'
   },
   {
     img:'4_1.jpg',
-    spot:null,
-    text:'<strong>단어장 Glossary</strong>예요. 레벨별로 단어 카드를 확인하고, 발음 버튼으로 원어민 발음을 들을 수 있어요!'
+    spot:{x:50,y:8,w:20,h:18},
+    text:'<strong>단어장 Glossary</strong>예요. 상단의 <strong>Word Game</strong>을 눌러보세요!'
   },
   {
     img:'4_2.jpg',
-    spot:null,
-    text:'그림을 보고 빈칸에 알맞은 글자를 입력하는 <strong>단어 게임</strong>이에요! 직접 키보드를 눌러 영어 단어를 완성해보세요.'
+    spot:{x:2,y:2,w:8,h:12},
+    text:'그림 보고 빈칸 채우는 <strong>단어 게임</strong>이에요! 뒤로가기로 돌아갈게요.'
+  },
+  {
+    img:'1.jpg',
+    spot:{x:0,y:52,w:18,h:15},
+    text:'다시 홈이에요. 왼쪽 <strong>Weekly Magazine</strong> 배너를 눌러볼까요?'
   },
   {
     img:'5_1.jpg',
-    spot:null,
-    text:'<strong>Weekly Magazine</strong> 목록이에요. 매주 새로운 주제로 업데이트되며, 영상·만화·게임·기사 4가지 코너가 담겨 있어요!'
+    spot:{x:8,y:8,w:56,h:50},
+    text:'<strong>Weekly Magazine</strong> 목록이에요. 이번 주 매거진을 열어봐요!'
   },
   {
     img:'5_2.jpg',
-    spot:null,
-    text:'매거진을 펼치면 이렇게 보여요! 실제 주제로 구성된 풍성한 영어 콘텐츠로 읽기·듣기·쓰기를 함께 익혀요.'
+    spot:{x:88,y:5,w:7,h:7},
+    text:'매거진 안이에요! X로 닫을게요.'
+  },
+  {
+    img:'1.jpg',
+    spot:{x:10,y:87,w:58,h:12},
+    bubblePos:'top',
+    text:'다시 홈이에요. 하단 <strong>Pet Challenge</strong> 배너를 눌러볼까요?'
   },
   {
     img:'6_1.jpg',
-    spot:null,
-    text:'<strong>펫 챌린지 방</strong>이에요. 캔디를 모아 펫 방을 꾸미고, 강아지 펫과 함께 성장하는 재미가 있어요!'
+    spot:{x:3,y:5,w:32,h:48},
+    text:'<strong>펫 챌린지</strong>예요! <strong>Word Challenge</strong>를 눌러볼까요?'
   },
   {
     img:'6_2.jpg',
-    spot:null,
-    text:'<strong>챌린지 맵</strong>이에요. 단어 문제를 맞추며 모험 맵을 탐험하고, 스테이지를 클리어할수록 펫이 성장해요!'
+    spot:{x:2,y:2,w:8,h:11},
+    text:'<strong>챌린지 맵</strong>이에요! 이제 체험을 마칠게요!'
   }
 ];
 
-let tourStep = 0;
+let currentStep = 0;
 
 function openTour() {
-  tourStep = 0;
+  currentStep = 0;
   document.getElementById('tour-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
+  document.getElementById('tour-center').style.display = 'flex';
+  document.getElementById('tour-complete').style.display = 'none';
   buildDots();
   renderStep(0);
 }
@@ -376,31 +409,30 @@ function renderStep(step) {
     img.onerror = () => img.classList.remove('fading');
   }, 200);
 
-  const spot = document.getElementById('spotlight-el');
+  const hotspot = document.getElementById('hotspot');
   if (s.spot) {
-    spot.style.display = 'block';
-    spot.style.left = s.spot.x + '%';
-    spot.style.top = s.spot.y + '%';
-    spot.style.width = s.spot.w + '%';
-    spot.style.height = s.spot.h + '%';
+    hotspot.style.display = 'block';
+    hotspot.style.left   = s.spot.x + '%';
+    hotspot.style.top    = s.spot.y + '%';
+    hotspot.style.width  = s.spot.w + '%';
+    hotspot.style.height = s.spot.h + '%';
   } else {
-    spot.style.display = 'none';
+    hotspot.style.display = 'none';
   }
 
   document.getElementById('bubble-text').innerHTML = s.text;
 
-  const nextBtn = document.getElementById('next-btn');
-  const isLast = step === STEPS.length - 1;
-  nextBtn.textContent = isLast ? '완료 ✓' : '다음 ›';
-  nextBtn.className = 'next-btn' + (isLast ? ' finish' : '');
+  const pos = s.bubblePos || 'bottom';
+  document.getElementById('guide-bubble').className = 'guide-bubble pos-' + pos;
+  document.getElementById('guide-char').className   = 'guide-char pos-'   + pos;
 
   updateDots(step);
 }
 
 function nextStep() {
-  if (tourStep < STEPS.length - 1) {
-    tourStep++;
-    renderStep(tourStep);
+  if (currentStep < STEPS.length - 1) {
+    currentStep++;
+    renderStep(currentStep);
   } else {
     document.getElementById('tour-center').style.display = 'none';
     document.getElementById('tour-complete').style.display = 'flex';
