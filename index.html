@@ -164,14 +164,33 @@ body{font-family:'Nunito',sans-serif;color:var(--navy);overflow-x:hidden}
 /* Guide bubble — top or bottom of tour screen */
 .guide-bubble{
   position:absolute;left:0;right:0;
-  background:rgba(140,210,245,.96);backdrop-filter:blur(8px);
-  padding:18px 20px 20px 130px;
-  display:flex;align-items:center;gap:16px;
-  z-index:20;min-height:120px;
+  background:transparent;
+  padding:10px 14px 10px 126px;
+  display:flex;align-items:center;
+  z-index:20;
 }
-.guide-bubble.pos-bottom{bottom:0;top:auto;border-radius:0 0 8px 8px}
-.guide-bubble.pos-top{top:0;bottom:auto;border-radius:8px 8px 0 0}
-.bubble-text{flex:1;font-size:14px;font-weight:700;color:#0a1a40;line-height:1.65}
+.guide-bubble.pos-bottom{bottom:0;top:auto;}
+.guide-bubble.pos-top{top:0;bottom:auto;}
+
+/* Speech bubble body */
+.bubble-body{
+  flex:1;
+  position:relative;
+  background:rgba(235,248,255,0.97);
+  backdrop-filter:blur(12px);
+  border-radius:16px;
+  padding:12px 16px;
+  margin-left:8px;
+  box-shadow:0 4px 20px rgba(0,0,0,0.22),0 0 0 1.5px rgba(255,255,255,0.7);
+}
+.bubble-body::before{
+  content:'';
+  position:absolute;
+  left:-13px;top:30%;transform:translateY(-50%);
+  border:7px solid transparent;
+  border-right-color:rgba(235,248,255,0.97);
+}
+.bubble-text{font-size:14px;font-weight:700;color:#0a1a40;line-height:1.65}
 .bubble-text strong{color:#0055AA}
 
 /* Character in guide bubble */
@@ -179,6 +198,7 @@ body{font-family:'Nunito',sans-serif;color:var(--navy);overflow-x:hidden}
   position:absolute;left:10px;
   width:116px;height:140px;
   object-fit:contain;z-index:22;pointer-events:none;
+  filter:drop-shadow(0 3px 10px rgba(0,0,0,0.5)) drop-shadow(0 0 3px rgba(255,255,255,0.6));
 }
 .guide-char.pos-bottom{bottom:0;top:auto;object-position:bottom center}
 .guide-char.pos-top{top:0;bottom:auto;object-position:top center}
@@ -211,8 +231,9 @@ body{font-family:'Nunito',sans-serif;color:var(--navy);overflow-x:hidden}
   .tour-screen{width:320px;height:200px}
   .tour-tablet{padding:28px 16px 24px}
   .bubble-text{font-size:12px}
-  .guide-bubble{min-height:90px;padding:14px 14px 16px 100px}
-  .guide-char{width:88px;height:110px}
+  .guide-bubble{padding:8px 10px 8px 96px}
+  .guide-char{width:80px;height:100px}
+  .bubble-body{padding:10px 12px}
 }
 </style>
 </head>
@@ -272,7 +293,9 @@ body{font-family:'Nunito',sans-serif;color:var(--navy);overflow-x:hidden}
         </div>
         <div class="guide-bubble pos-bottom" id="guide-bubble">
           <img class="guide-char pos-bottom" id="guide-char" src="character.png" alt="">
-          <div class="bubble-text" id="bubble-text"></div>
+          <div class="bubble-body">
+            <div class="bubble-text" id="bubble-text"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -296,68 +319,68 @@ const STEPS = [
     img:'0.jpg',
     spot:{x:28,y:68,w:36,h:14},
     bubblePos:'top',
-    text:'<strong>토도영어 체험관</strong>에 오신 것을 환영해요! START 버튼을 눌러 시작해볼까요?'
+    text:'<strong>토도영어 체험관</strong>에 오신 것을 환영해요! 아이가 매일 즐겁게 영어를 배우는 토도영어의 주요 기능을 함께 살펴볼게요. START를 눌러볼까요?'
   },
   {
     img:'1.jpg',
     spot:{x:11,y:28,w:38,h:54},
-    text:'이곳이 <strong>홈 대시보드</strong>예요. <strong>Daily Course</strong>를 눌러서 오늘의 학습을 시작해보세요!'
+    text:'이곳이 <strong>홈 대시보드</strong>예요. 매일 새로운 학습이 준비되는 <strong>Daily Course</strong>, 미션, 단어장, 매거진 등 모든 콘텐츠를 한눈에 볼 수 있어요. Daily Course를 눌러볼까요?'
   },
   {
     img:'2.jpg',
     spot:{x:88,y:37,w:11,h:8},
-    text:'<strong>데일리 코스</strong>예요. 오른쪽 <strong>Mission</strong> 메뉴를 눌러볼까요?'
+    text:'<strong>데일리 코스</strong>예요! 아이의 레벨에 맞는 수업이 매일 업데이트되고, 듣기·읽기·말하기가 자연스럽게 통합된 학습으로 구성돼 있어요. 오른쪽 <strong>Today\'s Mission</strong>도 확인해볼까요?'
   },
   {
     img:'3.jpg',
     spot:{x:78,y:10,w:8,h:17},
-    text:'<strong>오늘의 미션</strong>이에요! X 버튼으로 닫아봐요.'
+    text:'<strong>오늘의 미션</strong>이에요! 매일 달성할 수 있는 학습 목표가 주어져서 아이의 꾸준한 학습 습관 형성에 도움을 줘요. X 버튼으로 닫아봐요.'
   },
   {
     img:'1.jpg',
     spot:{x:84,y:43,w:15,h:18},
-    text:'다시 홈으로 왔어요. 오른쪽 <strong>Glossary</strong> 메뉴를 눌러볼까요?'
+    text:'다시 홈이에요. 오른쪽에 보이는 <strong>Glossary</strong>는 레벨별로 정리된 핵심 단어장이에요. 그림과 함께 어휘를 익힐 수 있어요. 눌러볼까요?'
   },
   {
     img:'4_1.jpg',
     spot:{x:50,y:8,w:20,h:18},
-    text:'<strong>단어장 Glossary</strong>예요. 상단의 <strong>Word Game</strong>을 눌러보세요!'
+    text:'<strong>단어장 Glossary</strong>예요! 레벨 A~F까지 체계적으로 정리된 어휘를 그림과 음성으로 익혀요. 단어를 외운 뒤 바로 <strong>Word Game</strong>으로 복습할 수 있어요. 눌러볼까요?'
   },
   {
     img:'4_2.jpg',
     spot:{x:2,y:2,w:8,h:12},
-    text:'그림 보고 빈칸 채우는 <strong>단어 게임</strong>이에요! 뒤로가기로 돌아갈게요.'
+    text:'그림을 보고 빈칸을 채우는 <strong>단어 게임</strong>이에요! 퀴즈 형식으로 어휘를 재미있게 복습하면서 자연스럽게 기억력을 높여줘요. 뒤로가기로 돌아갈게요.'
   },
   {
     img:'1.jpg',
     spot:{x:0,y:52,w:18,h:15},
-    text:'다시 홈이에요. 왼쪽 <strong>Weekly Magazine</strong> 배너를 눌러볼까요?'
+    text:'다시 홈이에요. 왼쪽의 <strong>Weekly Magazine</strong>은 매주 새로운 주제로 발행되는 영어 리딩 콘텐츠예요. 독해력과 배경지식을 함께 키울 수 있어요. 눌러볼까요?'
   },
   {
     img:'5_1.jpg',
     spot:{x:8,y:8,w:56,h:50},
-    text:'<strong>Weekly Magazine</strong> 목록이에요. 이번 주 매거진을 열어봐요!'
+    text:'<strong>Weekly Magazine</strong> 목록이에요! 과학·자연·사회 등 흥미로운 주제로 구성돼 있어서 아이가 영어를 읽는 즐거움을 자연스럽게 느낄 수 있어요. 이번 주 매거진을 열어봐요!'
   },
   {
     img:'5_2.jpg',
     spot:{x:88,y:5,w:7,h:7},
-    text:'매거진 안이에요! X로 닫을게요.'
+    text:'매거진 안이에요! 풍부한 이미지와 함께 영어 지문을 읽으며 독해력과 어휘를 동시에 학습해요. 모르는 단어는 바로 터치해서 뜻을 확인할 수 있어요. X로 닫을게요.'
   },
   {
     img:'1.jpg',
     spot:{x:10,y:87,w:58,h:12},
     bubblePos:'top',
-    text:'다시 홈이에요. 하단 <strong>Pet Challenge</strong> 배너를 눌러볼까요?'
+    text:'다시 홈이에요. 하단의 <strong>Pet Challenge</strong>는 아이가 자신만의 펫과 함께 단어 퀴즈에 도전하는 코너예요. 성취감과 재미를 동시에 잡을 수 있어요. 눌러볼까요?'
   },
   {
     img:'6_1.jpg',
     spot:{x:3,y:5,w:32,h:48},
-    text:'<strong>펫 챌린지</strong>예요! <strong>Word Challenge</strong>를 눌러볼까요?'
+    text:'<strong>펫 챌린지</strong>예요! 귀여운 펫 캐릭터를 키우며 단어 퀴즈를 풀어나가는 방식이라 아이가 영어 학습을 게임처럼 즐길 수 있어요. <strong>Word Challenge</strong>를 눌러볼까요?'
   },
   {
     img:'6_2.jpg',
     spot:{x:2,y:2,w:8,h:11},
-    text:'<strong>챌린지 맵</strong>이에요! 이제 체험을 마칠게요!'
+    text:'<strong>챌린지 맵</strong>이에요! 단계별 미션을 완료하며 새로운 구역을 해금해 나가요. 이제 토도영어의 주요 기능을 모두 살펴봤어요. 지금 바로 시작해볼까요?'
   }
 ];
 
